@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -49,9 +48,7 @@ class ProjectController {
     }
 
     @GetMapping(value = "/{projectId}")
-    public ResponseEntity<?> get(@PathVariable Long projectId) {
-
-        Assert.notNull(projectId, "Project id can not be null");
+    public ResponseEntity<Project> get(@PathVariable Long projectId) {
 
         Project project = repository.findOne(projectId);
 
@@ -61,4 +58,32 @@ class ProjectController {
 
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
+
+    @DeleteMapping(value = "/{projectId}")
+    public ResponseEntity<Long> delete(@PathVariable Long projectId) {
+
+        if (null == repository.findOne(projectId)) {
+            throw new ResourceNotFoundException();
+        }
+
+        repository.delete(projectId);
+        return new ResponseEntity<>(projectId, HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{projectId}")
+    public ResponseEntity<Project> update(@PathVariable Long projectId, @RequestBody Project project) {
+
+        Project currentProject = repository.findOne(projectId);
+
+        if (null == currentProject) {
+            throw new ResourceNotFoundException();
+        }
+
+        currentProject.setName(project.getName());
+        Project projectSaved = repository.save(currentProject);
+
+        return new ResponseEntity<>(projectSaved, HttpStatus.OK);
+    }
+
+
 }
