@@ -1,5 +1,6 @@
 package io.italocomini.smartproject.controllers;
 
+import io.italocomini.smartproject.exceptions.ResourceNotFoundException;
 import io.italocomini.smartproject.models.Project;
 import io.italocomini.smartproject.repositories.ProjectRepository;
 import org.springframework.data.domain.Page;
@@ -7,18 +8,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
 @RequestMapping("/v1/projects")
-public class ProjectController {
+class ProjectController {
 
-    private ProjectRepository repository;
+    private final ProjectRepository repository;
 
     public ProjectController(ProjectRepository repository) {
         this.repository = repository;
@@ -47,5 +48,17 @@ public class ProjectController {
         return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
     }
 
+    @GetMapping(value = "/{projectId}")
+    public ResponseEntity<?> get(@PathVariable Long projectId) {
 
+        Assert.notNull(projectId, "Project id can not be null");
+
+        Project project = repository.findOne(projectId);
+
+        if (project == null) {
+            throw new ResourceNotFoundException();
+        }
+
+        return new ResponseEntity<>(project, HttpStatus.OK);
+    }
 }

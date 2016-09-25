@@ -3,7 +3,6 @@ package io.italocomini.smartproject.services;
 import io.italocomini.smartproject.models.User;
 import io.italocomini.smartproject.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UserService implements UserDetailsService {
+class UserService implements UserDetailsService {
 
-    private UserRepository repository;
+    private final UserRepository repository;
 
     public UserService(UserRepository userRepository) {
         this.repository = userRepository;

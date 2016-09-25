@@ -20,6 +20,13 @@ public class Project {
     @Length(max = 100)
     private String name;
 
+    public Project() {
+    }
+
+    public Project(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

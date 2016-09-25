@@ -35,7 +35,6 @@ public class User {
 
     @Column(name = "admin", columnDefinition = "char(3)")
     @Type(type = "yes_no")
-    @NotEmpty
     private boolean admin;
 
     public Long getId() {
